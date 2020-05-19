@@ -54,9 +54,9 @@ install.packages("ggplot2")
 この作業はセッションを再開する度に必要です.
 
 ```{r}
-library(dplyr)
-library(readr)
-library(ggplot2)
+?library(dplyr)
+?library(readr)
+??library(ggplot2)
 ```
 
 ### `here`パッケージ
