@@ -1,0 +1,154 @@
+---
+title: "ggplot2 パッケージによる作図入門"
+output: html_notebook
+---
+
+### 重ね書きのイメージ
+
+ggplot2パッケージは重ね書きです.
+そのイメージを掴むために, 重ね書きのステップに分けてグラフを描いてみましょう.
+
+まずは, 下地を作ります.
+ggplot()関数で白(グレー)の下地を用意します.
+第一引数にプロットするデータを指定します(後で指定も可能).
+第二引数のmapping=aes()でどの列をx軸やy軸にプロットするのかを指定します.
+なお、dataやmapping,x,yは順番を変えなければ省略可能です.
+    
+```{r}
+library(ggplot2)
+ggplot(data = iris,
+       mapping = aes(
+         x = Petal.Length
+         )
+       )
+```
+
+次にヒストグラムを作成し, プロットします.
+ヒストグラムを追加するには用意した下地とgeom_histogram()を+でつなぎます.
+
+```{r}
+ggplot(data = iris,
+       mapping = aes(
+         x = Petal.Length
+         )) +
+  geom_histogram()
+```
+
+そして, 4行目にy = ..density..を追加し, y軸を割合に変更します.
+5行目にfill = "blue"を追加し, ヒストグラムに色を付けます.
+また, ヒストグラムを描画した図にgeom_density()で密度曲線を追加しましょう.
+引数のalphaは密度曲線の中の透明度を表します.
+今回は0%を指定して透明にしました.
+
+```{r}
+ggplot(data = iris,
+       mapping = aes(
+         x = Petal.Length,
+         y = ..density..)) +
+  geom_histogram(fill = "blue") +
+  geom_density(alpha = 0)
+```
+
+論文に載せやすいように背景は白くしましょう.
+theme_classic()で背景を白く, 重要でない線はなくすなど行います.
+
+```{r}
+ggplot(data = iris,
+       mapping = aes(
+         x = Petal.Length,
+         y = ..density..)) +
+  geom_histogram(fill = "blue") +
+  geom_density(alpha = 0) +
+  theme_classic()
+```
+
+最後にタイトルをつけます.
+タイトルはggtitle()で指定できます.
+タイトルの文字列はダブルクオーテーション(")で囲みます.
+RStudio Cloud上で日本語フォントを利用する方法は後述します.
+
+```{r}
+ggplot(data = iris,
+       mapping = aes(
+         x = Petal.Length,
+         y = ..density..)) +
+  geom_histogram(fill = "blue") +
+  geom_density(alpha = 0) +
+  theme_classic() +
+  ggtitle("histogram and density")
+```
+
+### 1枚のグラフにカテゴリーごとのヒストグラムを描く
+
+1枚のグラフにカテゴリーごとのヒストグラムを描いてみましょう.
+aes(fill= Category)とすることでカテゴリーごとに色分けができます.
+また, geom_histogram(position = "identity")とすると1つの図の中でカテゴリーごとにヒストグラムが描けます.
+
+```{r}
+ggplot(data = iris,
+       mapping = aes(
+         x = Petal.Length,
+         y = ..density..,
+         fill = Species)) +
+  geom_histogram(
+    position = "identity",
+    alpha = 0.5) +
+  geom_density(alpha = 0)
+```
+
+### 別々のグラフにカテゴリーごとのグラフを描く
+
+別々のグラフにカテゴリーごとのグラフを描いてみましょう.
+facet_wrap(~Category)とすることで, 別々の図にカテゴリーごとのヒストグラムを描けます.
+scales = "free"でx軸やy軸をそれぞれのカテゴリーに最適化します.
+
+```{r}
+ggplot(iris,
+       aes(Petal.Length,
+           ..density..,
+           fill = Species)) +
+  geom_histogram() +
+  geom_density(alpha = 0) + 
+  facet_wrap(~Species,
+             scales = "free")
+```
+
+### 日本語を含んだグラフ
+
+RStudio Cloudは日本語に弱いですが, 完全にできないわけではありません.
+
+日本語を含んだグラフをRStudio Cloudで描くには, showtextパッケージを利用し, 日本語のフォントをGoogleからダウンロードして指定します.
+ここでは, Noto Sans JPフォントを利用します.
+
+googleが公開しているフォントは各自で好きなものを選択してください．
+https://fonts.google.com/
+
+```{r}
+install.packages("showtext")
+library(showtext)
+font_add_google("Noto Sans JP", "noto")
+showtext_auto()
+```
+
+ggplot2でグラフを描き, theme内でbase_family = "noto"とし, Noto Sans JPフォントを画像内で利用することを宣言します.
+その後, ggsave()関数を利用して保存し, Markdown記法で画像を呼び出します.
+showtextパッケージはRStudioのViewerと相性が悪いため, 一度保存するとうまくいきます.
+図番号などをつけたい場合は$LaTeX$記法を使うのが便利です.
+
+```{r}
+p <- ggplot(data = iris,
+       mapping = aes(
+         x = Petal.Length
+         )) +
+  geom_histogram() +
+  ggtitle("ヒストグラム") +
+  theme_classic(base_family = "noto")
+ 
+ggsave(here("figure","figure-jp.pdf"),
+       p)
+```
+
+![](`r here("figure", "figure-jp.pdf")`) 
+
+
+ggplot2を利用した作図方法の概要は以上です.

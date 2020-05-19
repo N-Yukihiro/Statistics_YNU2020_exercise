@@ -1,0 +1,60 @@
+--- 
+title: "Rstudio cloudで日本語PDFを作成する"
+site: bookdown::bookdown_site
+output:
+  bookdown::pdf_book:
+    latex_engine: xelatex
+header-includes: 
+  - \usepackage{zxjatype} 
+  - \usepackage[haranoaji]{zxjafont} 
+documentclass: bxjsarticle
+classoption: xelatex,ja=standard
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      results = 'hide',
+                      warning = FALSE)
+```
+
+# Rstudio cloudで日本語PDFを作成する
+
+Rstudio cloudはブラウザ上でRstudioを利用できる優れたサービスです．
+しかし，デフォルトのままでは日本語を含むPDFを作成することが困難です．
+日本語を含むPDFを作成する方法がインターネット上になかったのでまとめました．
+
+Rstudio cloudで日本語を含むPDFを作成するには，下記のようにコードを走らせます．
+下記ではtinytexでデフォルトで入っていない(はずの)tikz用のパッケージも一緒にインストールしています．
+
+
+```{r eval=FALSE}
+install.packages("rmarkdown")
+install.packages("tinytex")
+install.packages("bookdown")
+```
+
+```{r}
+library(tinytex)
+options(tinytex.verbose = TRUE)
+options(tinytex.clean = FALSE)
+if (!dir.exists('/cloud/project/.TinyTeX')) {
+  install_tinytex(dir='/cloud/project/.TinyTeX')
+}
+use_tinytex(from='/cloud/project/.TinyTeX')
+Sys.getenv("PATH")
+## tikzに必要なパッケージをインストール
+tinytex::tlmgr_install(c("gf", "preview", "xcolor"), usermode = TRUE)
+```
+
+これで日本語pdfが作成できました．
+
+なぜか「う」が表示されないので何かわかる人がいたら教えて下さい．
+
+# 参考HP
+
+- https://community.rstudio.com/t/latex-language-package-installation-not-working/51596/11
+
+- https://qiita.com/nozma/items/1c6b000b674225fd40d7
+
+- https://yihui.org/tinytex/
