@@ -11,7 +11,7 @@ install.packages("tidyverse")  # 初回のみ
 
 ## 公開するもの1
 
-授業の回数に応じたRmarkdownを公開します．
+授業の回数に応じたR notebookを公開します．
 各自こちらのコードを参考に演習を進めてください．
 
 ## 公開するもの2
@@ -32,7 +32,7 @@ clone(url = "https://github.com/N-Yukihiro/Statistics_YNU2020_exercise.git",
       local_path = "exercise") # 初回のみ
 ```
 
-このgithubのレポジトリが更新された場合は，次のようにコードを実行してフォルダの内容を更新し, 各自Rmarkdownをコピーしてください．
+このgithubのレポジトリが更新された場合は，次のようにコードを実行してフォルダの内容を更新し, 各自R notebookをコピーしてください．
 
 ```
 library(git2r) # 利用時は毎回
