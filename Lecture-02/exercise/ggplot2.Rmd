@@ -144,11 +144,19 @@ p <- ggplot(data = iris,
   ggtitle("ヒストグラム") +
   theme_classic(base_family = "noto")
  
+dir.create("figure")
 ggsave(here("figure","figure-jp.pdf"),
        p)
 ```
+もしくは
+```{r}
+ggsave(here("Lecture-02", "exercise","figure","figure-jp.pdf"),
+       p)
+```
+
 
 ![](`r here("figure", "figure-jp.pdf")`) 
-
+もしくは
+![](`r here("Lecture-02", "exercise","figure","figure-jp.pdf")`) 
 
 ggplot2を利用した作図方法の概要は以上です.
