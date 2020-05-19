@@ -22,6 +22,7 @@ getwd()
 
 新しいディレクトリ(フォルダ)を作成するためには`dir.create()`関数を利用します.
 ここでは, dataという名前の新しいディレクトリを作成します.
+このnotobook上で新しいディレクトリを作成するとこのnotobookがあるディレクトリにフォルダが作成されます.
 
 ```{r}
 dir.create("data")
@@ -220,6 +221,15 @@ write.csv(g, here("data", "data.csv"),
           quote=FALSE, row.names=FALSE)
 ```
 
+notebook上でdataというディレクトリを作成した場合(28行目)には, csvの書き出しの場所は以下のようにしてください.
+
+```{r}
+write.csv(g, here("exercise", "Lecture-02", "exercise", "data", "data.csv"), 
+          quote=FALSE, row.names=FALSE)
+```
+
+以下読み込む場合も同じです.
+
 ### データの読み込み
 
 最もオーソドックスな読み込み方は, read.csv()関数です.
@@ -228,12 +238,20 @@ header=TRUEで先頭行が行名になっていることを明示します.
 ```{r}
 dat1 <- read.csv(here("data", "data.csv"), header = TRUE) 
 ```
+もしくは
+```{r}
+dat1 <- read.csv(here("exercise", "Lecture-02", "exercise", "data", "data.csv"), header = TRUE) 
+```
 
 最近増えてきているのは, readrパッケージに含まれるread_csv()関数です.
 自由度も高く, やや速いです.
 
 ```{r}
 dat2 <- readr::read_csv(here("data", "data.csv"))
+```
+もしくは
+```{r}
+dat2 <- readr::read_csv(here("exercise", "Lecture-02", "exercise", "data", "data.csv"))
 ```
 
 最後にdata.tableパッケージのfread()関数を紹介します.
@@ -244,6 +262,11 @@ dat2 <- readr::read_csv(here("data", "data.csv"))
 install.packages("data.table")
 library(data.table)
 dat3 <- data.table::fread(here("data", "data.csv"),
+                          data.table = FALSE)
+```
+もしくは
+```{r}
+dat3 <- data.table::fread(here("exercise", "Lecture-02", "exercise", "data", "data.csv"),
                           data.table = FALSE)
 ```
 
