@@ -77,7 +77,7 @@ fisher.exact(x = Pass,
 対応のないデータにおける母比率の差のフィッシャーの正確検定を行うには, chisq.test()関数を利用する
 
 ```{r}
-chisq.test(Pass)
+chisq.test(Pass, correct = FALSE)
 ```
 
 ### 対応のあるデータ(時系列)における母比率の差のマクネマー検定
