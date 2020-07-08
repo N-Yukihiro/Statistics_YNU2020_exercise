@@ -1,0 +1,82 @@
+---
+title: "比率の差の検定"
+output: html_notebook
+---
+
+### 母比率と比較値の差の$z$検定(両側検定)
+
+母比率と比較値の差の$z$検定を行うためには, BSDAパッケージのz.test()関数を利用する.
+
+受験者8920人のうち470人合格するのは, 6.79%と異なるかを検定する.
+
+```{r}
+library(BSDA)
+female <- c(rep(0, 8450),
+            rep(1, 470))
+BSDA::z.test(x = female, 
+             mu = 6.79, 
+             sigma.x = sqrt(mean(female) * (1 - mean(female))),
+             alternative = "two.sided",
+             conf.level = .99)
+```
+
+### 母比率と比較値の差の$z$検定(片側検定)
+
+片側検定を行うには, alternativeの引数で"less" もしくは "greater"を指定する.
+
+```{r}
+z.test(x = female, 
+             mu = 6.79, 
+       sigma.x = sqrt(mean(female) * (1 - mean(female))),
+       alternative = "less",
+       conf.level = .99)
+```
+
+### 適合度の$\chi^2$検定
+
+適合度の$\chi^2$検定を行うには, chisq.test()関数を利用する.
+
+```{r}
+chisq.test (x = c(470, 8450), 
+            p = c(0.0679, (1 - 0.0679)))
+```
+
+
+### 母比率と比較値の差の$F$検定
+
+母比率と比較値の差の$F$検定を行うには, exactciパッケージのbinom.exact()関数を利用する.
+tsmethod = "central"を指定することで, Clopper and Pearsonの方法でp値と信頼区間を算出する.
+
+Rにデフォルトで格納されているbinom.test()関数は$p$値の計算方法と95%信頼区間の計算方法が異なるので利用しない.
+
+```{r}
+install.packages("exactci")
+library(exactci)
+exactci::binom.exact(x = 470, n = 8920, p = 0.0679,
+                     alternative = "two.sided",
+                     tsmethod = "central", 
+                     conf.level = .99)
+```
+
+### 対応のないデータにおける母比率の差のフィッシャーの正確検定
+
+対応のないデータにおける母比率の差のフィッシャーの正確検定を行うには, exact2x2パッケージのfisher.exact()関数を利用する.
+第1引数に検定をしたいクロス集計表を行列で与える.
+
+```{r}
+install.packages("exact2x2")
+library(exact2x2)
+Pass <- matrix(c(15, 5, 85, 60), nrow = 2)
+fisher.exact(x = Pass,
+             alternative = "greater",
+             tsmethod="minlike")
+```
+
+### 対応のあるデータ(時系列)における母比率の差のマクネマー検定
+
+対応のあるデータ(時系列)における母比率の差のマクネマー検定を行うには, mcnemar.test()関数を利用する.
+
+```{r}
+News <- matrix(c(25, 5, 15, 55), nrow = 2)
+mcnemar.test(x = News, correct = TRUE)
+```
